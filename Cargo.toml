@@ -1,0 +1,59 @@
+[package]
+name = "sys-cert-store"
+version = "0.2.0"
+edition = "2024"
+license = "MIT"
+description = "Multi-platform Rust certificate-store library with a Win32-shaped API"
+build = "build.rs"
+autobins = false
+
+[lib]
+name = "sys_cert_store"
+crate-type = ["rlib"]
+
+[[bin]]
+name = "certutil"
+path = "src/bin/certutil.rs"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+base64ct = { version = "1", features = ["alloc"] }
+cms = { version = "0.3.0-pre.1", features = ["std"] }
+const-oid = "0.10"
+der = { version = "0.8", features = ["pem"] }
+hex = "0.4"
+foreign-types-shared = "0.1"
+libc = "0.2"
+md-5 = "0.10"
+openssl = "0.10"
+openssl-sys = "0.9"
+p12-keystore = "0.3"
+p256 = { version = "0.13", features = ["pkcs8"] }
+p384 = { version = "0.13", features = ["pkcs8"] }
+p521 = { version = "0.13", features = ["pkcs8"] }
+parking_lot = "0.12"
+pkcs8 = { version = "0.10", features = ["pem"] }
+rand = "0.9"
+rsa = "0.9"
+rusqlite = { version = "0.37", features = ["bundled"] }
+sha1 = "0.10"
+sha2 = "0.10"
+x509-parser = { version = "0.18", features = ["verify"] }
+x509-cert = "0.3"
+walkdir = "2"
+zeroize = "1"
+ureq = { version = "3", default-features = false }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows-sys = { version = "0.61.2", features = [
+    "Win32_Foundation",
+    "Win32_Security_Cryptography",
+    "Win32_System_Services",
+] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = "debuginfo"
